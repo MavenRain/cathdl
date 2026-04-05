@@ -17,4 +17,19 @@ impl Circuit for Counter {
         };
         Io::pure(next)
     }
+
+    fn to_verilog(&self) -> String {
+        r#"module Counter (
+    input wire clk,
+    input wire enable,
+    output reg [31:0] count
+);
+    always @(posedge clk) begin
+        if (enable) begin
+            count <= count + 1;
+        end
+    end
+endmodule
+"#.to_string()
+    }
 }

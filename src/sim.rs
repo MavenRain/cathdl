@@ -3,7 +3,7 @@ use crate::types::CircuitError;
 
 pub fn simulate_steps<C>(
     circuit: C,
-    mut state: C::State,
+    initial_state: C::State,
     input: C::Input,
     steps: usize,
 ) -> Result<Vec<C::State>, CircuitError>
@@ -12,7 +12,8 @@ where
     C::State: Clone,
     C::Input: Clone,
 {
-    let mut history = vec![state.clone()];
+    let mut history = vec![initial_state.clone()];
+    let mut state = initial_state;
 
     for _ in 0..steps {
         let next_state = circuit.update(input.clone(), state)

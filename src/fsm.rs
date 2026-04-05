@@ -13,7 +13,7 @@ pub enum Light {
 pub struct TrafficLight;
 
 impl Circuit for TrafficLight {
-    type Input = bool;  // enable/tick
+    type Input = bool;  // tick
     type State = Light;
 
     fn update(&self, tick: bool, current: Light) -> Io<CircuitError, Light> {
@@ -27,5 +27,26 @@ impl Circuit for TrafficLight {
             }
         };
         Io::pure(next)
+    }
+
+    fn to_verilog(&self) -> String {
+        r#"module TrafficLight (
+    input wire clk,
+    input wire tick,
+    output reg [1:0] state
+);
+    localparam RED = 0, GREEN = 1, YELLOW = 2;
+
+    always @(posedge clk) begin
+        if (tick) begin
+            case (state)
+                RED: state <= GREEN;
+                GREEN: state <= YELLOW;
+                YELLOW: state <= RED;
+            endcase
+        end
+    end
+endmodule
+"#.to_string()
     }
 }

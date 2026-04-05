@@ -25,13 +25,27 @@ For CI/CD, we have a GitHub workflow that builds the docs.
 ```rust
 use cathdl::{Bit, Dff, Counter, simulate_steps};
 
-let dff = Dff;
-let states = simulate_steps(dff, Bit::Low, Bit::High, 3).unwrap();
-println!("{:?}", states);
+fn main() {
+    if let Err(e) = run_simulation() {
+        eprintln!("Simulation error: {}", e);
+        return;
+    }
+    println!("Simulation completed.");
+}
 
-let counter = Counter;
-let counts = simulate_steps(counter, 0u32, Bit::High, 5).unwrap();
-println!("{:?}", counts);  // [0, 1, 2, 3, 4, 5]
+fn run_simulation() -> Result<(), String> {
+    let dff = Dff;
+    let states = simulate_steps(dff, Bit::Low, Bit::High, 3)
+        .map_err(|e| e.to_string())?;
+    println!("{:?}", states);
+
+    let counter = Counter;
+    let counts = simulate_steps(counter, 0u32, Bit::High, 5)
+        .map_err(|e| e.to_string())?;
+    println!("{:?}", counts);
+
+    Ok(())
+}
 ```
 
 ## Next steps

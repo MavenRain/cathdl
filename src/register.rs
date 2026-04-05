@@ -10,7 +10,19 @@ impl Circuit for Dff {
     type State = Bit;
 
     fn update(&self, input: Bit, _current: Bit) -> Io<CircuitError, Bit> {
-        // On clock, output becomes the input (D flip flop)
         Io::pure(input)
+    }
+
+    fn to_verilog(&self) -> String {
+        r#"module Dff (
+    input wire clk,
+    input wire d,
+    output reg q
+);
+    always @(posedge clk) begin
+        q <= d;
+    end
+endmodule
+"#.to_string()
     }
 }
