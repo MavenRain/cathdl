@@ -1,0 +1,40 @@
+# CathDL
+
+A hardware description library built on comp-cat-rs 0.5 using categorical effects (Io monad).
+
+## Features
+- Circuits defined via the Circuit trait with Io-based updates
+- Functional style inspired by RHDL
+- Simulation via simulate_steps
+- Full Rustdoc support
+
+## Building Documentation
+
+To generate the doc webpage:
+
+```bash
+cargo doc --open
+```
+
+This opens a local webpage with all module and function documentation.
+
+For CI/CD, we have a GitHub workflow that builds the docs.
+
+## Example
+
+```rust
+use cathdl::{Bit, Dff, Counter, simulate_steps};
+
+let dff = Dff;
+let states = simulate_steps(dff, Bit::Low, Bit::High, 3).unwrap();
+println!("{:?}", states);
+
+let counter = Counter;
+let counts = simulate_steps(counter, 0u32, Bit::High, 5).unwrap();
+println!("{:?}", counts);  // [0, 1, 2, 3, 4, 5]
+```
+
+## Next steps
+- Waveform generation using Stream
+- Synthesis backend
+- Macros for nicer syntax
